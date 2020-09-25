@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.xl.practice.springbootshiropractice.Mapper.UserMapper">
+	<!-- 根据用户名查询用户 -->
+	<select id="selectUserByName" parameterType="string"
+		resultType="com.xl.practice.springbootshiropractice.entity.User">
+		SELECT * FROM users WHERE name = #{name};
+	</select>
+	<!-- 根据用户名查询权限 -->
+	<select id="listPrivilege" parameterType="string"
+		resultType="string">
+		SELECT p.name FROM privilege p INNER JOIN role_privilege rp
+		ON rp.privilege_id = p.id
+		INNER JOIN roles r ON rp.role_id = r.id AND
+		r.name = (SELECT
+		r.name FROM roles r INNER JOIN user_role ur ON
+		ur.role_id = r.id
+		INNER
+		JOIN users u ON u.id = ur.user_id AND u.name =
+		#{name});
+	</select>
+	<!-- 根据用户名查询角色 -->
+	<select id="listRole" parameterType="string" resultType="string">
+		SELECT
+		r.name FROM roles r INNER JOIN user_role ur ON ur.role_id = r.id
+		INNER
+		JOIN users u ON u.id = ur.user_id AND u.name = #{name};
+	</select>
+	<!--查询所有的权限  -->
+	<select id="getAllPrivileges" resultType="string">
+		SELECT name FROM privilege;
+		
+	</select>
+
+</mapper>
+
